@@ -1,14 +1,14 @@
 {
-    "name": "mysql",
-    "version": "1.0.0",
-    "main": "app.js",
-    "type": "module",
-    "scripts": {
-        "start": "node app.js"
-    },
-    "dependencies": {
-        "cors": "^2.8.5",
-        "express": "^4.18.2",
-        "mysql2": "^3.6.0"
-    }
+  "name": "todo-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mysql2": "^3.10.0",
+    "dotenv": "^16.4.5"
+  }
 }
