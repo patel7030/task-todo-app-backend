@@ -1,18 +1,26 @@
 import mysql from "mysql2/promise";
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config(); // Required for local testing
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MySQL connection (Railway)
+// Debugging: print environment variables ONCE
+console.log("DB HOST:", process.env.MYSQLHOST);
+console.log("DB USER:", process.env.MYSQLUSER);
+console.log("DB NAME:", process.env.MYSQLDATABASE);
+
+// MySQL (Railway)
 const db = await mysql.createConnection({
     host: process.env.MYSQLHOST,
     user: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
-    port: process.env.MYSQLPORT
+    port: process.env.MYSQLPORT,
 });
 
 console.log("MySQL connected successfully");
@@ -55,21 +63,17 @@ app.put("/todos/:id", async (req, res) => {
     const { id } = req.params;
     const { status, task } = req.body;
 
-    try {
-        if (status) {
-            await db.query("UPDATE todos SET status = ? WHERE id = ?", [status, id]);
-        }
-        if (task) {
-            await db.query("UPDATE todos SET task = ? WHERE id = ?", [task, id]);
-        }
-        res.json({ message: "Todo updated!" });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Update failed" });
+    if (status) {
+        await db.query("UPDATE todos SET status = ? WHERE id = ?", [status, id]);
     }
+    if (task) {
+        await db.query("UPDATE todos SET task = ? WHERE id = ?", [task, id]);
+    }
+
+    res.json({ message: "Todo updated!" });
 });
 
-// Delete (soft delete)
+// Delete todo
 app.delete("/todos/:id", async (req, res) => {
     const { id } = req.params;
 
